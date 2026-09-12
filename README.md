@@ -5,9 +5,7 @@ Cada aluno roda tudo localmente na própria VM: tráfego real contra `unb.br` (D
 e um serviço local simulado (login em texto claro + demonstração de DoS/spoofing contra
 a própria máquina).
 
-## Uso rápido
-
-### Preparação da VM
+## Preparação da VM
 
 ```bash
 wget -O setup-ambiente.sh \
