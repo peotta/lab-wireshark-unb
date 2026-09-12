@@ -27,12 +27,12 @@ python3 login_server.py
 
 ## Conteúdo
 
-- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) — roteiro completo da aula, módulo a módulo
-- [`scripts/setup-ambiente.sh`](./scripts/setup-ambiente.sh) — preparação de VM (rodar uma vez, antes da aula)
-- [`scripts/login_server.py`](./scripts/login_server.py) — servidor HTTP minimalista usado no Módulo 3 (credenciais em texto claro)
+- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) - roteiro completo da aula, módulo a módulo
+- [`scripts/setup-ambiente.sh`](./scripts/setup-ambiente.sh) - preparação de VM (rodar uma vez, antes da aula)
+- [`scripts/login_server.py`](./scripts/login_server.py) - servidor HTTP minimalista usado no Módulo 3 (credenciais em texto claro)
 
 ## Regra de ouro
 
 Todo o tráfego "ofensivo" (força bruta, SYN flood, spoofing de IP) do roteiro é
-executado **exclusivamente contra `localhost`/`127.0.0.1`** — nunca contra `unb.br`,
+executado **exclusivamente contra `localhost`/`127.0.0.1`** - nunca contra `unb.br`,
 a máquina de um colega, ou qualquer outro host da rede.
