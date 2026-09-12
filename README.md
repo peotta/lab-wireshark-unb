@@ -1,11 +1,13 @@
 # lab-wireshark-unb
 
-Laboratório prático de 2h com captura e análise de pacotes com Wireshark, em Kali Linux.
+Laboratório prático de 2h - captura e análise de pacotes com Wireshark, em Kali Linux.
 Cada aluno roda tudo localmente na própria VM: tráfego real contra `unb.br` (DNS/TCP/TLS)
 e um serviço local simulado (login em texto claro + demonstração de DoS/spoofing contra
 a própria máquina).
 
-## Preparação da VM
+## Uso rápido
+
+No início da aula (preparação do ambiente, primeiros minutos):
 
 ```bash
 wget -O setup-ambiente.sh \
@@ -27,8 +29,10 @@ python3 login_server.py
 
 ## Conteúdo
 
-- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) - roteiro completo da aula, módulo a módulo
-- [`scripts/setup-ambiente.sh`](./scripts/setup-ambiente.sh) - preparação de VM (rodar uma vez, antes da aula)
+- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) - roteiro do instrutor: módulo a módulo, com tempos sugeridos e checklist de preparação
+- [`roteiro-aluno.md`](./roteiro-aluno.md) - roteiro do aluno: mesmo conteúdo prático, sem marcação de tempo, com tabela de referência de comandos e filtros no final
+- [`apresentacao-wireshark-unb.pdf`](./apresentacao-wireshark-unb.pdf) - slides da aula, um por atividade do roteiro
+- [`scripts/setup-ambiente.sh`](./scripts/setup-ambiente.sh) - preparação de VM (primeiro passo da aula)
 - [`scripts/login_server.py`](./scripts/login_server.py) - servidor HTTP minimalista usado no Módulo 3 (credenciais em texto claro)
 
 ## Regra de ouro
