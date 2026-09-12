@@ -1,13 +1,13 @@
 # lab-wireshark-unb
 
-Laboratório prático de 2h — captura e análise de pacotes com Wireshark, em Kali Linux.
+Laboratório prático de 2h com captura e análise de pacotes com Wireshark, em Kali Linux.
 Cada aluno roda tudo localmente na própria VM: tráfego real contra `unb.br` (DNS/TCP/TLS)
 e um serviço local simulado (login em texto claro + demonstração de DoS/spoofing contra
 a própria máquina).
 
 ## Uso rápido
 
-Na véspera da aula (preparação da VM, não durante a aula):
+### Preparação da VM
 
 ```bash
 wget -O setup-ambiente.sh \
