@@ -195,18 +195,19 @@ sudo hping3 -S -p 8080 --flood localhost
 ```
 - Deixar rodar por **no máximo 10 a 15 segundos** e então `Ctrl+C` para parar.
 - Enquanto isso, tentar em outro terminal: `curl -m 3 http://localhost:8080/`, observar que o serviço fica lento ou não responde dentro do timeout.
+- Pode causar travamento da VM.
 
 **Opção 2: quantidade fixa de pacotes (reprodutível, para automaticamente):**
 ```bash
 sudo hping3 -S -p 8080 -c 2000 --flood localhost
 ```
-Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho — todo aluno gera a mesma quantidade, o que facilita comparar os números depois no Statistics > Conversations.
+Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho.
 
 **Opção 3: taxa controlada (flood "moderado", sem `--flood`):**
 ```bash
 sudo hping3 -S -p 8080 -c 2000 -i u1000 localhost
 ```
-`-i u1000` manda um pacote a cada 1000 microssegundos (1ms) — ritmo fixo em vez de "o mais rápido possível". Bom para comparar com a Opção 2 e discutir a diferença entre volume total e taxa de envio.
+`-i u1000` manda um pacote a cada 1000 microssegundos (1ms) - ritmo fixo em vez de "o mais rápido possível". 
 
 ### 5.4 Analisando a captura
 1. Parar a captura no Wireshark.
