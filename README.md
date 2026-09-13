@@ -7,7 +7,7 @@ a própria máquina).
 
 ## Uso rápido
 
-No início da aula (preparação do ambiente, primeiros minutos):
+No início da aula (preparação do ambiente):
 
 ```bash
 wget -O setup-ambiente.sh \
@@ -29,11 +29,11 @@ python3 login_server.py
 
 ## Conteúdo
 
-- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) - roteiro do instrutor: módulo a módulo, com tempos sugeridos e checklist de preparação
-- [`roteiro-aluno.md`](./roteiro-aluno.md) - roteiro do aluno: mesmo conteúdo prático, sem marcação de tempo, com tabela de referência de comandos e filtros no final
-- [`apresentacao-wireshark-unb.pdf`](./apresentacao-wireshark-unb.pdf) - slides da aula, um por atividade do roteiro
+- [`roteiro-curso-wireshark-2h.md`](./roteiro-curso-wireshark-2h.md) - roteiro do professor
+- [`roteiro-aluno.md`](./roteiro-aluno.md) - roteiro do aluno
+- [`apresentacao-wireshark-unb.pdf`](./apresentacao-wireshark-unb.pdf) - slides da aula
 - [`scripts/setup-ambiente.sh`](./scripts/setup-ambiente.sh) - preparação de VM (primeiro passo da aula)
-- [`scripts/login_server.py`](./scripts/login_server.py) - servidor HTTP minimalista usado no Módulo 3 (credenciais em texto claro)
+- [`scripts/login_server.py`](./scripts/login_server.py) - servidor HTTP usado no Módulo 3 (credenciais em texto claro)
 
 ## Regra de ouro
 
