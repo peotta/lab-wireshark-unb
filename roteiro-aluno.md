@@ -190,10 +190,23 @@ done
 
 ### 5.3 Gerando o flood
 ```bash
+# Opção 1: manual, controlado no Ctrl+C
 sudo hping3 -S -p 8080 --flood localhost
 ```
 - Deixar rodar por **no máximo 10 a 15 segundos** e então `Ctrl+C` para parar.
 - Enquanto isso, tentar em outro terminal: `curl -m 3 http://localhost:8080/`, observar que o serviço fica lento ou não responde dentro do timeout.
+
+**Opção 2: quantidade fixa de pacotes (reprodutível, para automaticamente):**
+```bash
+sudo hping3 -S -p 8080 -c 2000 --flood localhost
+```
+Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho — todo aluno gera a mesma quantidade, o que facilita comparar os números depois no Statistics > Conversations.
+
+**Opção 3: taxa controlada (flood "moderado", sem `--flood`):**
+```bash
+sudo hping3 -S -p 8080 -c 2000 -i u1000 localhost
+```
+`-i u1000` manda um pacote a cada 1000 microssegundos (1ms) — ritmo fixo em vez de "o mais rápido possível". Bom para comparar com a Opção 2 e discutir a diferença entre volume total e taxa de envio.
 
 ### 5.4 Analisando a captura
 1. Parar a captura no Wireshark.
@@ -237,6 +250,7 @@ sudo pkill hping3
 | `ftp localhost` | Testar o serviço FTP local de simulação (Módulo 3, Opção A) |
 | `curl -d "user=X&pass=Y" http://localhost:8080/` | Simular um login no serviço local |
 | `sudo hping3 -S -p 8080 --flood localhost` | Gerar SYN flood contra o próprio serviço (Módulo 5) |
+| `sudo hping3 -S -p 8080 -c 2000 --flood localhost` | SYN flood com quantidade fixa de pacotes, para sozinho |
 | `sudo hping3 -S -p 8080 --rand-source --flood localhost` | Simular spoofing de IP de origem no flood |
 | `sudo pkill hping3` | Encerrar o flood |
 | `export SSLKEYLOGFILE=~/tls-keys.log` | Preparar o navegador para exportar chaves TLS (Módulo 2.4) |
