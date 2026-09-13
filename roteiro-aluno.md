@@ -195,19 +195,18 @@ sudo hping3 -S -p 8080 --flood localhost
 ```
 - Deixar rodar por **no máximo 10 a 15 segundos** e então `Ctrl+C` para parar.
 - Enquanto isso, tentar em outro terminal: `curl -m 3 http://localhost:8080/`, observar que o serviço fica lento ou não responde dentro do timeout.
-- Pode causar travamento da VM.
 
 **Opção 2: quantidade fixa de pacotes (reprodutível, para automaticamente):**
 ```bash
 sudo hping3 -S -p 8080 -c 2000 --flood localhost
 ```
-Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho.
+Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho, todo aluno gera a mesma quantidade, o que facilita comparar os números depois no Statistics > Conversations.
 
 **Opção 3: taxa controlada (flood "moderado", sem `--flood`):**
 ```bash
 sudo hping3 -S -p 8080 -c 2000 -i u1000 localhost
 ```
-`-i u1000` manda um pacote a cada 1000 microssegundos (1ms) - ritmo fixo em vez de "o mais rápido possível". 
+`-i u1000` manda um pacote a cada 1000 microssegundos (1ms), ritmo fixo em vez de "o mais rápido possível". Bom para comparar com a Opção 2 e discutir a diferença entre volume total e taxa de envio.
 
 ### 5.4 Analisando a captura
 1. Parar a captura no Wireshark.
@@ -220,7 +219,30 @@ sudo hping3 -S -p 8080 -c 2000 -i u1000 localhost
 - Por que isso é visualmente muito diferente do login legítimo do Módulo 3? Não é sobre o *conteúdo* do pacote, é sobre o *padrão*.
 - Como uma ferramenta de defesa (firewall, IDS, rate limiting) usaria esse mesmo padrão para detectar e bloquear automaticamente?
 
-### 5.5 Encerrando o ambiente
+### 5.5 Spoofing de origem: simulando um DDoS
+Objetivo: entender a diferença entre DoS (uma origem) e DDoS (múltiplas origens aparentes).
+
+**IP de origem fixo, mas falso:**
+```bash
+sudo hping3 -S -p 8080 -a 10.10.10.10 -c 500 --flood localhost
+```
+
+**IP de origem sorteado a cada pacote:**
+```bash
+sudo hping3 -S -p 8080 --rand-source -c 2000 --flood localhost
+```
+
+**No Wireshark:**
+1. Filtro: `tcp.flags.syn == 1 && tcp.flags.ack == 0`
+2. Statistics > Endpoints: no primeiro comando, um único IP falso aparece como origem; no segundo, dezenas ou centenas de IPs distintos aparecem, mesmo saindo de uma única máquina
+3. Comparar com a captura da Atividade 5.4: lá só existia 127.0.0.1 como origem
+
+**Discussão:**
+- DoS é uma origem atacando; DDoS é múltiplas origens ao mesmo tempo. Esta atividade simula só a assinatura de um DDoS (muitos IPs aparentes) a partir de uma única máquina, não um DDoS de verdade (que usa muitas máquinas reais)
+- Se os IPs sorteados não aparecerem, pode ser o rp_filter do kernel descartando pacotes com origem "impossível". Conferir com `sysctl net.ipv4.conf.all.rp_filter`
+- A defesa real contra spoofing acontece na origem (BCP38/egress filtering), não no alvo
+
+### 5.6 Encerrando o ambiente
 ```bash
 sudo pkill hping3
 ```
@@ -252,6 +274,7 @@ sudo pkill hping3
 | `curl -d "user=X&pass=Y" http://localhost:8080/` | Simular um login no serviço local |
 | `sudo hping3 -S -p 8080 --flood localhost` | Gerar SYN flood contra o próprio serviço (Módulo 5) |
 | `sudo hping3 -S -p 8080 -c 2000 --flood localhost` | SYN flood com quantidade fixa de pacotes, para sozinho |
+| `sudo hping3 -S -p 8080 -a 10.10.10.10 --flood localhost` | Spoofing com IP de origem fixo (Módulo 5) |
 | `sudo hping3 -S -p 8080 --rand-source --flood localhost` | Simular spoofing de IP de origem no flood |
 | `sudo pkill hping3` | Encerrar o flood |
 | `export SSLKEYLOGFILE=~/tls-keys.log` | Preparar o navegador para exportar chaves TLS (Módulo 2.4) |
