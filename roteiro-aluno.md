@@ -196,11 +196,11 @@ sudo hping3 -S -p 8080 --flood localhost
 - Deixar rodar por **no máximo 10 a 15 segundos** e então `Ctrl+C` para parar.
 - Enquanto isso, tentar em outro terminal: `curl -m 3 http://localhost:8080/`, observar que o serviço fica lento ou não responde dentro do timeout.
 
-**Opção 2: quantidade fixa de pacotes (reprodutível, para automaticamente):**
+**Opção 2: parar sozinho depois de alguns segundos (reprodutível):**
 ```bash
-sudo hping3 -S -p 8080 -c 2000 --flood localhost
+sudo timeout 8 hping3 -S -p 8080 --flood localhost
 ```
-Envia exatamente 2000 pacotes SYN o mais rápido possível e encerra sozinho, todo aluno gera a mesma quantidade, o que facilita comparar os números depois no Statistics > Conversations.
+`timeout` é um comando do Linux, não do hping3: ele mata o processo automaticamente depois de 8 segundos, não importa o que aconteça. Isso é necessário porque `-c` (quantidade de pacotes) não funciona de forma confiável junto com `--flood`. O hping3 só conta pacotes quando recebe resposta, e em modo flood ele não processa respostas, então o contador nunca fecha e o programa roda até você apertar Ctrl+C na mão (é o que aconteceu se você tentou `-c` com `--flood` e viu "0 packets received" no resumo).
 
 **Opção 3: taxa controlada (flood "moderado", sem `--flood`):**
 ```bash
@@ -224,13 +224,14 @@ Objetivo: entender a diferença entre DoS (uma origem) e DDoS (múltiplas origen
 
 **IP de origem fixo, mas falso:**
 ```bash
-sudo hping3 -S -p 8080 -a 10.10.10.10 -c 500 --flood localhost
+sudo timeout 5 hping3 -S -p 8080 -a 10.10.10.10 --flood localhost
 ```
 
 **IP de origem sorteado a cada pacote:**
 ```bash
-sudo hping3 -S -p 8080 --rand-source -c 2000 --flood localhost
+sudo timeout 5 hping3 -S -p 8080 --rand-source --flood localhost
 ```
+(de novo `timeout`, não `-c`: com `--rand-source` as respostas vão para os IPs falsos sorteados, nunca voltam pro hping3, então `-c` nunca teria como funcionar aqui.)
 
 **No Wireshark:**
 1. Filtro: `tcp.flags.syn == 1 && tcp.flags.ack == 0`
@@ -273,7 +274,7 @@ sudo pkill hping3
 | `ftp localhost` | Testar o serviço FTP local de simulação (Módulo 3, Opção A) |
 | `curl -d "user=X&pass=Y" http://localhost:8080/` | Simular um login no serviço local |
 | `sudo hping3 -S -p 8080 --flood localhost` | Gerar SYN flood contra o próprio serviço (Módulo 5) |
-| `sudo hping3 -S -p 8080 -c 2000 --flood localhost` | SYN flood com quantidade fixa de pacotes, para sozinho |
+| `sudo timeout 8 hping3 -S -p 8080 --flood localhost` | SYN flood que para sozinho depois de 8s (não use -c com --flood) |
 | `sudo hping3 -S -p 8080 -a 10.10.10.10 --flood localhost` | Spoofing com IP de origem fixo (Módulo 5) |
 | `sudo hping3 -S -p 8080 --rand-source --flood localhost` | Simular spoofing de IP de origem no flood |
 | `sudo pkill hping3` | Encerrar o flood |
