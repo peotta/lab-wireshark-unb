@@ -32,7 +32,15 @@ ping -c 2 unb.br
 ```
 Para o serviço local dos módulos seguintes, a captura acontece na interface **Loopback: lo** (quando acessado via `127.0.0.1` ou `localhost`).
 
-### 0.3 Preparar o serviço local
+### 0.3 (Opcional) Clonar o repositório
+Se preferir ter todos os scripts disponíveis localmente em vez de baixar cada um com `wget`, clone o repositório uma única vez:
+```bash
+git clone https://github.com/peotta/lab-wireshark-unb.git
+cd lab-wireshark-unb/scripts
+```
+A partir daí, substitua qualquer `wget <url-do-script>` por simplesmente usar o arquivo já presente na pasta `scripts/`. O restante do roteiro continua igual.
+
+### 0.4 Preparar o serviço local
 Preparação completa em um comando só (recomendado):
 ```bash
 wget https://raw.githubusercontent.com/peotta/lab-wireshark-unb/main/scripts/setup-ambiente.sh
@@ -57,7 +65,7 @@ wget https://raw.githubusercontent.com/peotta/lab-wireshark-unb/main/scripts/log
 python3 login_server.py
 ```
 
-### 0.4 (Opcional) Decifrar o próprio HTTPS com SSLKEYLOGFILE
+### 0.5 (Opcional) Decifrar o próprio HTTPS com SSLKEYLOGFILE
 Útil para o Módulo 2 (tráfego real em `unb.br`). Navegadores modernos exportam as chaves de sessão TLS se a variável `SSLKEYLOGFILE` estiver definida **antes** de abrir o navegador:
 ```bash
 export SSLKEYLOGFILE=~/tls-keys.log
@@ -65,10 +73,10 @@ firefox &
 ```
 No Wireshark: `Edit > Preferences > Protocols > TLS > (Pre)-Master-Secret log filename`, apontar para `~/tls-keys.log`.
 
-### 0.5 Checklist antes de começar
+### 0.6 Checklist antes de começar
 - [ ] Wireshark abre sem erro de permissão
 - [ ] `curl -I https://unb.br` responde normalmente
-- [ ] O serviço local escolhido (vsftpd ou `login_server.py`) sobe sem erro e responde em `localhost`
+- [ ] O serviço local escolhido (vsftpd ou `login_server.py`) sobe sem erro e responde em `localhost` (ver Seção 0.4)
 - [ ] Interface `lo` aparece na lista de interfaces do Wireshark
 
 ---
