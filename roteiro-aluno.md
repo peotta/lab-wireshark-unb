@@ -155,14 +155,14 @@ ftp localhost   # usuário/senha de teste
 
 **Cenário:** "Alguém tentou adivinhar a senha do serviço local. Investigue a captura."
 
-### Gerando o incidente (contra o seu próprio serviço)
+### 4.1 Gerando o incidente (contra o seu próprio serviço)
 ```bash
 for pass in 123456 senha admin SenhaSuperSecreta123; do
   curl -s -d "user=admin&pass=$pass" http://localhost:8080/ > /dev/null
 done
 ```
 
-### Investigando a captura
+### 4.2 Investigando a captura
 1. Filtro: `http.request.method == "POST"`
 2. **Follow > HTTP Stream** em cada tentativa até achar a que teve sucesso ("Login OK").
 3. Responder:
@@ -236,7 +236,7 @@ sudo timeout 5 hping3 -S -p 8080 --rand-source --flood localhost
 **No Wireshark:**
 1. Filtro: `tcp.flags.syn == 1 && tcp.flags.ack == 0`
 2. Statistics > Endpoints: no primeiro comando, um único IP falso aparece como origem; no segundo, dezenas ou centenas de IPs distintos aparecem, mesmo saindo de uma única máquina
-3. Comparar com a captura da Atividade 5.4: lá só existia 127.0.0.1 como origem
+3. Comparar com a captura da Seção 5.4: lá só existia 127.0.0.1 como origem
 
 **Discussão:**
 - DoS é uma origem atacando; DDoS é múltiplas origens ao mesmo tempo. Esta atividade simula só a assinatura de um DDoS (muitos IPs aparentes) a partir de uma única máquina, não um DDoS de verdade (que usa muitas máquinas reais)
@@ -252,7 +252,7 @@ sudo pkill hping3
 
 ## Encerramento
 - Fluxo mental: **Capturar → Filtrar → Seguir o stream → Correlacionar com estatísticas**
-- Três padrões vistos na aula: tráfego real cifrado (Módulo 2), credencial em texto claro (Módulo 3), volume anômalo de negação de serviço (Módulo 5), cada um com uma assinatura diferente no Wireshark
+- Quatro padrões vistos na aula: tráfego real cifrado (Módulo 2), credencial em texto claro (Módulo 3), análise forense de incidente (Módulo 4), volume anômalo de negação de serviço (Módulo 5) — cada um com uma assinatura diferente no Wireshark
 - Limite ético: simulações de credenciais e de DoS só contra serviço/máquina próprios, nunca contra `unb.br`, colegas ou qualquer infraestrutura de terceiros
 - Próximos passos: `wireshark.org/docs`, wiki.wireshark.org/SampleCaptures (pcaps de exemplo reais), e o livro *Practical Packet Analysis* (Chris Sanders)
 
