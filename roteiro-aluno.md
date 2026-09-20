@@ -127,10 +127,6 @@ tls.handshake.type == 1     # Client Hello
 3. Abrir **Server Hello** / **Certificate**: mostrar emissor, validade, algoritmo de assinatura.
 4. **Follow > TCP Stream** num pacote de Application Data: o conteúdo é ilegível (cifrado). Ponto central: TLS protege o conteúdo, não os metadados.
 
-### 2.4 (Se configurado o item 0.4) Decifrando o próprio HTTPS
-1. Navegar até `https://unb.br` no navegador aberto com `SSLKEYLOGFILE` ativo.
-2. Com o TLS keylog configurado nas preferências: `Follow > HTTP Stream`, o conteúdo aparece decifrado.
-
 ---
 
 ## Módulo 3: Gerador de tráfego local, simulando um cenário inseguro
