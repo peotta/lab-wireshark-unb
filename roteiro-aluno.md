@@ -355,6 +355,23 @@ sudo pkill hping3
 | `tcp.analysis.ack_rtt > 0.2` | Round-trip alto (possível latência) |
 | `arp` | Tráfego ARP |
 
+#### 💡 Dicas para encontrar problemas
+
+Insira estes filtros na barra de pesquisa para identificar o problema imediatamente:
+
+| Filtro | O que indica |
+|---|---|
+| `icmp.type == 3 and icmp.code == 4` | **Principal indicador de problema de MTU.** Filtra mensagens ICMP *Destination Unreachable (Fragmentation Needed and DF set)*. Se esse pacote aparecer, a MTU em algum ponto do caminho é menor que o tamanho do pacote enviado. |
+| `ip.flags.df == 1` | Mostra todos os pacotes com a flag *Don't Fragment* ativada. Combinado com problemas de desempenho, ajuda a rastrear conexões travadas. |
+| `ip.flags.mf == 1 or ip.frag_offset > 0` | Monitora pacotes **realmente fragmentados**. `mf == 1` indica que há mais fragmentos chegando; `frag_offset > 0` captura todos os fragmentos que não são o primeiro. |
+| `tcp.analysis.retransmission` | Problemas de MTU frequentemente causam retransmissões de pacotes grandes — geralmente travando em requisições HTTP/TLS maiores, enquanto pings pequenos funcionam perfeitamente. |
+| `tcp.analysis.duplicate_ack` | **ACKs duplicados** são sinal clássico de perda de pacotes. Três ou mais seguidos geralmente disparam a retransmissão rápida do TCP. |
+| `tcp.window_size == 0` | **Janela TCP zero** — o receptor está com o buffer cheio e pedindo para o emissor parar de enviar. Indica gargalo de memória ou processamento lento na aplicação. |
+| `dns.flags.rcode != 0` | Respostas DNS com **código de erro** (`NXDOMAIN`, `SERVFAIL`, `REFUSED`, etc.). Útil para diagnosticar falhas de resolução de nomes que podem ser confundidas com problemas de rede. |
+| `tcp.options.mss` | Exibe todos os pacotes que **anunciam o MSS** (Maximum Segment Size) — aparecem apenas no SYN e SYN-ACK. Permite ver o valor negociado por cada lado da conexão. |
+| `tcp.options.mss_val < 1460` | MSS negociado **abaixo do padrão Ethernet** (1460 = 1500 MTU − 20 IP − 20 TCP). Indica conexão passando por VPN, túnel, PPPoE ou caminho com MTU reduzido. |
+| `frame.len > 1500` | Frames maiores que a MTU Ethernet padrão — indica **Jumbo Frames** ou problema de configuração de interface de rede. |
+
 ### Recursos do menu Statistics
 
 | Recurso | Para que serve |
