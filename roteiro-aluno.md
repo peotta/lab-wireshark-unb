@@ -134,13 +134,27 @@ tls.handshake.type == 1     # Client Hello
 **Objetivo:** capturar e analisar um protocolo em texto claro de ponta a ponta, algo que não dá pra mostrar contra um site HTTPS real.
 
 ### 3.1 Subindo o serviço
+
+**Servidor HTTP local (texto claro):**
 ```bash
 python3 login_server.py     # Opção B
 # ou, se escolheu FTP:
 sudo systemctl start vsftpd  # Opção A
 ```
 
-### 3.2 Capturando um login legítimo
+**Servidor SSH (tráfego cifrado — para comparação):**
+```bash
+# Verificar se o SSH já está instalado
+ssh -V
+
+# Iniciar o serviço OpenSSH
+sudo systemctl start ssh
+
+# Confirmar que está em execução (deve aparecer "active (running)")
+sudo systemctl status ssh
+```
+
+### 3.2 Capturando um login legítimo (HTTP — texto claro)
 1. Iniciar captura na interface **Loopback: lo**.
 2. Em outro terminal:
 ```bash
@@ -151,7 +165,27 @@ ftp localhost   # usuário/senha de teste
 3. Filtro: `http.request.method == "POST"` (ou `ftp`)
 4. **Follow > TCP Stream**: usuário e senha aparecem em texto claro.
 
-**Discussão:** compare com o Módulo 2, mesmo protocolo (requisição/resposta), mas sem TLS por cima, tudo fica exposto. É exatamente essa diferença que HTTPS resolve.
+**Discussão:** sem TLS, todo o conteúdo da requisição — incluindo credenciais — trafega em texto legível na rede.
+
+---
+
+### 3.3 Capturando tráfego SSH (cifrado — contraste)
+
+**Objetivo:** mostrar que o SSH, ao contrário do HTTP simples, oculta completamente o conteúdo, incluindo as credenciais.
+
+1. Manter a captura ativa na interface **Loopback: lo**.
+2. Em outro terminal, iniciar uma sessão SSH para o próprio host:
+```bash
+ssh seu_usuario@localhost
+# Aceite a fingerprint ("yes") e informe a senha quando solicitado
+```
+3. Filtro no Wireshark: `tcp.port == 22`
+4. **Follow > TCP Stream**: observe que o conteúdo é ilegível — apenas dados cifrados.
+5. Compare os campos do pacote com os do HTTP:
+   - Você consegue ver IP de origem/destino e porta? ✅
+   - Você consegue ver usuário ou senha? ❌
+
+**Discussão:** o SSH cifra o payload desde o início da sessão. Mesmo com acesso ao tráfego de rede, um atacante não consegue extrair credenciais — ao contrário do HTTP ou FTP em texto claro. Esse é o princípio que também fundamenta o HTTPS (TLS sobre HTTP).
 
 ---
 
