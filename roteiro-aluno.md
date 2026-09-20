@@ -142,7 +142,7 @@ python3 login_server.py     # Opção B
 sudo systemctl start vsftpd  # Opção A
 ```
 
-**Servidor SSH (tráfego cifrado — para comparação):**
+**Servidor SSH (tráfego cifrado - para comparação):**
 ```bash
 # Verificar se o SSH já está instalado
 ssh -V
@@ -154,7 +154,7 @@ sudo systemctl start ssh
 sudo systemctl status ssh
 ```
 
-### 3.2 Capturando um login legítimo (HTTP — texto claro)
+### 3.2 Capturando um login legítimo (HTTP - texto claro)
 1. Iniciar captura na interface **Loopback: lo**.
 2. Em outro terminal:
 ```bash
@@ -165,11 +165,11 @@ ftp localhost   # usuário/senha de teste
 3. Filtro: `http.request.method == "POST"` (ou `ftp`)
 4. **Follow > TCP Stream**: usuário e senha aparecem em texto claro.
 
-**Discussão:** sem TLS, todo o conteúdo da requisição — incluindo credenciais — trafega em texto legível na rede.
+**Discussão:** sem TLS, todo o conteúdo da requisição - incluindo credenciais - trafega em texto legível na rede.
 
 ---
 
-### 3.3 Capturando tráfego SSH (cifrado — contraste)
+### 3.3 Capturando tráfego SSH (cifrado - contraste)
 
 **Objetivo:** mostrar que o SSH, ao contrário do HTTP simples, oculta completamente o conteúdo, incluindo as credenciais.
 
@@ -180,12 +180,12 @@ ssh seu_usuario@localhost
 # Aceite a fingerprint ("yes") e informe a senha quando solicitado
 ```
 3. Filtro no Wireshark: `tcp.port == 22`
-4. **Follow > TCP Stream**: observe que o conteúdo é ilegível — apenas dados cifrados.
+4. **Follow > TCP Stream**: observe que o conteúdo é ilegível - apenas dados cifrados.
 5. Compare os campos do pacote com os do HTTP:
    - Você consegue ver IP de origem/destino e porta? ✅
    - Você consegue ver usuário ou senha? ❌
 
-**Discussão:** o SSH cifra o payload desde o início da sessão. Mesmo com acesso ao tráfego de rede, um atacante não consegue extrair credenciais — ao contrário do HTTP ou FTP em texto claro. Esse é o princípio que também fundamenta o HTTPS (TLS sobre HTTP).
+**Discussão:** o SSH cifra o payload desde o início da sessão. Mesmo com acesso ao tráfego de rede, um atacante não consegue extrair credenciais - ao contrário do HTTP ou FTP em texto claro. Esse é o princípio que também fundamenta o HTTPS (TLS sobre HTTP).
 
 ---
 
@@ -290,7 +290,7 @@ sudo pkill hping3
 
 ## Encerramento
 - Fluxo mental: **Capturar → Filtrar → Seguir o stream → Correlacionar com estatísticas**
-- Quatro padrões vistos na aula: tráfego real cifrado (Módulo 2), credencial em texto claro (Módulo 3), análise forense de incidente (Módulo 4), volume anômalo de negação de serviço (Módulo 5) — cada um com uma assinatura diferente no Wireshark
+- Quatro padrões vistos na aula: tráfego real cifrado (Módulo 2), credencial em texto claro (Módulo 3), análise forense de incidente (Módulo 4), volume anômalo de negação de serviço (Módulo 5) - cada um com uma assinatura diferente no Wireshark
 - Limite ético: simulações de credenciais e de DoS só contra serviço/máquina próprios, nunca contra `unb.br`, colegas ou qualquer infraestrutura de terceiros
 - Próximos passos: `wireshark.org/docs`, wiki.wireshark.org/SampleCaptures (pcaps de exemplo reais), e o livro *Practical Packet Analysis* (Chris Sanders)
 
