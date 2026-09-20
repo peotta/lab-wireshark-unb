@@ -15,8 +15,13 @@ else
 fi
 
 echo "-- vsftpd (Opcao A do Modulo 3) --"
-sudo apt-get update -qq
-sudo apt-get install -y vsftpd
+if ! command -v vsftpd &>/dev/null; then
+    sudo apt-get update -qq
+    sudo apt-get install -y vsftpd
+    echo "vsftpd instalado."
+else
+    echo "vsftpd ja disponivel."
+fi
 sudo systemctl enable --now vsftpd
 if ! id "aluno_teste" &>/dev/null; then
     sudo useradd -m aluno_teste
@@ -31,6 +36,22 @@ if ! command -v hping3 &> /dev/null; then
     sudo apt-get install -y hping3
 else
     echo "hping3 ja disponivel."
+fi
+
+echo "-- openssh-server (captura de trafego SSH) --"
+if ! command -v sshd &>/dev/null; then
+    sudo apt-get install -y openssh-server
+    echo "openssh-server instalado."
+else
+    echo "openssh-server ja disponivel."
+fi
+sudo systemctl enable --now ssh
+
+# Teste: porta 22 escutando
+if ss -tlnp | grep -q ':22'; then
+    echo "OK: SSH ativo na porta 22."
+else
+    echo "AVISO: SSH nao esta escutando na porta 22 -- verifique manualmente."
 fi
 
 echo "-- login_server.py (Opcao B do Modulo 3) --"
